@@ -2,6 +2,7 @@
 
 FROM pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime
 # FROM python:3.10-slim-buster
+# RUN pip install --no-cache-dir nvidia-tensorrt --index-url https://pypi.ngc.nvidia.com
 
 # Arguments to build Docker Image using CUDA
 # ARG USE_CUDA=0
@@ -28,8 +29,14 @@ RUN chown -R root:root $APP_HOME
 # 将原镜像地址替换为腾讯云镜像地址
 RUN sed -i 's/archive.ubuntu.com/mirrors.cloud.tencent.com/g' /etc/apt/sources.list
 RUN sed -i 's/security.ubuntu.com/mirrors.cloud.tencent.com/g' /etc/apt/sources.list
-RUN apt update && apt install --no-install-recommends -y build-essential &&\
-    apt clean && apt autoremove && rm -rf /var/lib/apt/lists/*
+
+RUN apt update \
+    && apt install --no-install-recommends -y gcc git zip curl htop libgl1 \
+    libglib2.0-0 libpython3-dev gnupg g++ libusb-1.0-0 libsm6 build-essential
+
+# RUN apt clean && apt autoremove && rm -rf /var/lib/apt/lists/*
+
+RUN apt upgrade --no-install-recommends -y openssl tar
 
 # 换源并更新pip
 RUN pip config set global.index-url https://pypi.mirrors.ustc.edu.cn/simple/
