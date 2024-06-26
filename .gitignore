@@ -2,6 +2,7 @@
 __pycache__
 *.py[cod]
 .venv
+.conda
 .vscode
 
 # build
@@ -12,7 +13,6 @@ __pycache__
 
 # source
 /weight
-# ! /weights/yolov5s.pt
 /datasets
 /dependence
 *.mp4
