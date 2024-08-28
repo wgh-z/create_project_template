@@ -1,6 +1,4 @@
-# docker run --rm --gpus all -it -v :/home/appuser/ -p : --name name name:latest
-
-FROM pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime
+FROM pytorch/pytorch:2.4.0-cuda12.4-cudnn9-runtime
 # FROM python:3.10-slim-buster
 # RUN pip install --no-cache-dir nvidia-tensorrt --index-url https://pypi.ngc.nvidia.com
 
@@ -21,7 +19,6 @@ ENV APP_HOME /home/user/vstar
 
 WORKDIR $APP_HOME
 
-COPY . $APP_HOME
 # 指定目录拥有者为root
 RUN chown -R root:root $APP_HOME
 
@@ -38,10 +35,14 @@ RUN apt update \
 
 RUN apt upgrade --no-install-recommends -y openssl tar
 
+COPY requirements.txt $APP_HOME
+
 # 换源并更新pip
 RUN pip config set global.index-url https://pypi.mirrors.ustc.edu.cn/simple/
 RUN pip install --upgrade pip
 RUN pip install --no-cache -r requirements.txt
+
+COPY . $APP_HOME
 
 # gradio设置
 EXPOSE 7860
